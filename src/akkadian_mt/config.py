@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 @dataclass
 class TrainConfig:
-    model_name: str = "google/byt5-small"
+    model_name: str = "./final-byt5/byt5-akkadian-optimized-34x"
     seed: int = 42
 
     # sequence lengths

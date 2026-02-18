@@ -3,6 +3,7 @@
 !requirements.txt
 unified_akkadian_dict.json
 data_out/
+final-byt5/
 ckpt_byt5/
 ckpt_*/
 
