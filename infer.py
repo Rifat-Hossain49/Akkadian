@@ -62,6 +62,11 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained(args.model_dir)
     model = AutoModelForSeq2SeqLM.from_pretrained(args.model_dir).to(device).eval()
 
+    # m2m100-specific: get forced_bos_token_id for English generation
+    gen_kwargs = {}
+    if hasattr(model.config, "forced_bos_token_id") and model.config.forced_bos_token_id is not None:
+        gen_kwargs["forced_bos_token_id"] = model.config.forced_bos_token_id
+
     preds = []
     bs = args.batch_size
 
@@ -74,6 +79,7 @@ def main():
                     **enc,
                     num_beams=args.num_beams,
                     max_new_tokens=args.max_new_tokens,
+                    **gen_kwargs,
                 )
         dec = tokenizer.batch_decode(out, skip_special_tokens=True)
         preds.extend(dec)

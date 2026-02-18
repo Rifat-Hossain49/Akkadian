@@ -30,6 +30,19 @@ The code auto-discovers files by scanning the input root for:
 pip install -r requirements.txt
 ```
 
+## Download Pre-trained Model (Required)
+The training script uses a pre-trained ByT5 model optimized for Akkadian. Download it from Kaggle before training:
+
+```bash
+# Install Kaggle CLI
+pip install kaggle
+
+# Download and unzip the model (~2GB)
+kaggle datasets download assiaben/final-byt5 -p ./final-byt5 --unzip
+```
+
+> **Note:** You need a Kaggle API key (`kaggle.json`) in `~/.kaggle/`. Get it from [Kaggle Settings → API → Create New Token](https://www.kaggle.com/settings).
+
 ## Running Locally
 
 ### Step 1: Prepare Training Data (JSONL)

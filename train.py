@@ -128,6 +128,17 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained(cfg.model_name)
     model = AutoModelForSeq2SeqLM.from_pretrained(cfg.model_name)
 
+    # m2m100-specific: set target language for tokenizer
+    forced_bos_token_id = None
+    if hasattr(tokenizer, "lang_code_to_id"):
+        # M2M100 / NLLB style tokenizer
+        if cfg.tgt_lang in tokenizer.lang_code_to_id:
+            tokenizer.tgt_lang = cfg.tgt_lang
+            forced_bos_token_id = tokenizer.lang_code_to_id[cfg.tgt_lang]
+        elif "en" in tokenizer.lang_code_to_id:
+            tokenizer.tgt_lang = "en"
+            forced_bos_token_id = tokenizer.lang_code_to_id["en"]
+
     def preprocess(batch):
         model_inputs = tokenizer(
             batch["source"],
@@ -180,12 +191,20 @@ def main():
         generation_max_length=cfg.max_new_tokens,
         generation_num_beams=cfg.num_beams,
         fp16=cfg.fp16 and torch.cuda.is_available(),
+        gradient_checkpointing=cfg.gradient_checkpointing,
+        dataloader_num_workers=cfg.dataloader_num_workers,
         report_to="none",
         save_total_limit=2,
         load_best_model_at_end=True,
         metric_for_best_model="geomean",
         greater_is_better=True,
     )
+
+    # Set forced_bos_token_id for m2m100 generation (tells model to output English)
+    if forced_bos_token_id is not None:
+        model.config.forced_bos_token_id = forced_bos_token_id
+        training_args.generation_config = model.generation_config
+        training_args.generation_config.forced_bos_token_id = forced_bos_token_id
 
     trainer = Seq2SeqTrainer(
         model=model,
