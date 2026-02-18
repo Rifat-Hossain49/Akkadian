@@ -1,0 +1,31 @@
+# Data files (too large for git)
+*.csv
+!requirements.txt
+unified_akkadian_dict.json
+data_out/
+ckpt_byt5/
+ckpt_*/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Logs
+error.log
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Misc
+submission.csv
