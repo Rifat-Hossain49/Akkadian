@@ -16,7 +16,7 @@ class TrainConfig:
     # training
     lr: float = 3e-4
     weight_decay: float = 0.01
-    num_train_epochs: float = 3.0
+    num_train_epochs: float = 2.0
     warmup_ratio: float = 0.06
 
     per_device_train_batch_size: int = 32
@@ -25,7 +25,7 @@ class TrainConfig:
 
     fp16: bool = True
     gradient_checkpointing: bool = True    # saves VRAM, allows bigger batch
-    dataloader_num_workers: int = 4        # parallel data loading
+    dataloader_num_workers: int = 0        # 0 for Windows compatibility (avoid pickling errors)
 
     eval_steps: int = 500
     save_steps: int = 500
